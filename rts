@@ -1,0 +1,17 @@
+#!/bin/bash
+
+rts() {
+  in="/dev/stdin"
+  out="/dev/stdout"
+  ifile="$1"
+  ofile="$2"
+  tmp=$(mktemp)
+  [[ -n ${ifile} ]] && in=$ifile
+  [[ -n ${ofile} ]] && out=$ofile
+  echo $in
+  echo $out
+  sed 's/\s*$//' $in > $tmp
+  cp $tmp $ofile
+}
+
+rts "$@"
