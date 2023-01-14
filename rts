@@ -12,6 +12,7 @@ rts() {
   echo $out
   sed 's/\s*$//' $in > $tmp
   cp $tmp $ofile
+  rm $tmp
 }
 
 rts "$@"
