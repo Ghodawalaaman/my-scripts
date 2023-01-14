@@ -8,10 +8,8 @@ rts() {
   tmp=$(mktemp)
   [[ -n ${ifile} ]] && in=$ifile
   [[ -n ${ofile} ]] && out=$ofile
-  echo $in
-  echo $out
   sed 's/\s*$//' $in > $tmp
-  cp $tmp $ofile
+  cp $tmp $out
   rm $tmp
 }
 
