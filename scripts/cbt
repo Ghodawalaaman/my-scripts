@@ -1,0 +1,56 @@
+#!/bin/bash
+
+# This scripts require the bluez package from AUR.
+# If found it tries to connect to the device of MAC address provide by
+# the user.
+
+set +xe    # This means if any of the program returns non zero value exit immediatly
+
+err() {
+  echo -e "[ERROR]: " $1
+  exit 1
+}
+
+check_deps() {
+  if [ ! -f "/bin/bluetoothctl" ]; then
+    err "Dependencies not found!\nInstall the bluez package from AUR repository"
+  fi
+}
+
+get_env() {
+  if [ -n "$1" ]; then
+    MAC=$1;
+  elif [ -n "$BT_DEV_MAC" ]; then
+    MAC=$BT_DEV_MAC
+  else
+    err "MAC address isn't provided\nset the BT_DEV_MAC environment variable or pass the MAC address from the command line"
+  fi
+}
+
+connect() {
+  check_deps
+  get_env $1
+  echo "[INFO]: Powering on the bluetooth"
+  bluetoothctl power on 1>/dev/null 2>&1
+
+  echo "[INFO]: Scanning..."
+  devs=`timeout 15s bluetoothctl scan on`
+  aval_dev_mac=`echo -e "$devs" | cut -d ' ' -f 3`
+
+  for dev_mac in $aval_dev_mac;
+  do
+    if [ "$dev_mac" == "$MAC" ]; then
+      timeout 15s bluetoothctl connect "$MAC" 1>/dev/null 2>&1
+      if [ `echo $?` != 0 ]; then
+        err "Could not connect to device"
+      fi
+      echo "[INFO]: Connected succesfully"
+      exit 0
+    fi
+  done
+  err "Device not found"
+
+}
+
+connect "$@"
+
