@@ -1,8 +1,8 @@
 #!/bin/bash
 
 check_file_perm() {
-  ifile_perm=`stat -c %A "$1"`
-  ofile_perm=`stat -c %A "$2"`
+  ifile_perm=$(stat -c %A "$1")
+  ofile_perm=$(stat -c %A "$2")
   [[ ${ifile_perm:0:1} == "d" ]] && echo "$1 is a directory" && exit 1
   [[ ${ofile_perm:0:1} == "d" ]] && echo "$2 is a directory" && exit 1
   [[ ${ifile_perm:1:1} == "-" ]] && echo "$1 is not readable" && exit 1
@@ -17,10 +17,10 @@ rts() {
   tmp=$(mktemp)
   [[ -n ${ifile} ]] && in=$ifile
   [[ -n ${ofile} ]] && out=$ofile
-  check_file_perm $in $out
-  sed 's/\s*$//' $in > $tmp
-  cp $tmp $out
-  rm $tmp
+  check_file_perm "$in" "$out"
+  sed 's/\s*$//' "$in" > "$tmp"
+  cp "$tmp" "$out"
+  rm "$tmp"
 }
 
 rts "$@"
