@@ -1,0 +1,17 @@
+#!/bin/bash
+
+wall_path="/home/${USER}/wallpapers/"
+random_wall() {
+	arr=()
+	while IFS='' read -r value; do
+		arr+=("$value")
+	done <<< $(find ${wall_path} -type f ! -regex '.*\.git.*')
+	len=${#arr[@]}
+	echo "$len" "wallpapers found!"
+	var=$((${RANDOM}%${len}))
+	ran_wall=${arr[$var]}
+	echo "$ran_wall" "selected as wallpaper"
+	feh --bg-fill "$ran_wall"
+}
+
+random_wall
