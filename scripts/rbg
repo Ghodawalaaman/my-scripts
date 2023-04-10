@@ -11,6 +11,11 @@ random_wall() {
 	var=$((${RANDOM}%${len}))
 	ran_wall=${arr[$var]}
 	echo "$ran_wall" "selected as wallpaper"
+	if [[ "${XDG_CURRENT_DESKTOP}" =~ "GNOME" ]];
+	then
+		gsettings set org.gnome.desktop.background picture-uri "file://${ran_wall}"
+		exit 0
+	fi
 	feh --bg-fill "$ran_wall"
 }
 
