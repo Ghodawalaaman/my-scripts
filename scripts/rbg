@@ -15,8 +15,19 @@ random_wall() {
 	then
 		gsettings set org.gnome.desktop.background picture-uri "file://${ran_wall}"
 		exit 0
+	elif [ "$XDG_SESSION_TYPE" == "wayland" -a -f /bin/swaybg ]; then
+		pid="`pidof swaybg`"
+		if [ -n "${pid}" ]; then
+			echo "swaybg is already running"
+			kill "${pid}"
+		fi
+		swaybg -i "${ran_wall}" -m fill &
+		exit 0
+	elif [ -f /bin/feh ]; then
+		feh --bg-fill "$ran_wall"
+		exit 0
 	fi
-	feh --bg-fill "$ran_wall"
+	echo "Couldn't change the wallpaper!"
 }
 
 random_wall
