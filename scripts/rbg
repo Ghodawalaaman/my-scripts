@@ -8,7 +8,7 @@ random_wall() {
 	done <<< $(find ${wall_path} -type f ! -regex '.*\.git.*')
 	len=${#arr[@]}
 	echo "$len" "wallpapers found!"
-	var=$(shuf -i 0-${len} -n 1)
+	var=$(shuf -i 0-$((${len}-1)) -n 1)
 	ran_wall=${arr[$var]}
 	echo "$ran_wall" "selected as wallpaper"
 	if [[ "${XDG_CURRENT_DESKTOP}" =~ "GNOME" ]];
